@@ -7,11 +7,7 @@ from tqdm import tqdm
 
 def compute_accuracy(outputs, labels):
     outputs = torch.argmax(outputs, dim=1)
-    acc = 0
-    for idx in range(len(outputs)):
-        if outputs[idx] == labels[idx]:
-            acc += 1
-    acc /= len(outputs)
+    acc = (outputs == labels).sum().item() / len(outputs)
     return acc
 
 
@@ -58,7 +54,7 @@ def train_classifier(device, root_dir, num_labels, patience=5, numEpochs=40):
         # Train section
         model.train()
         train_loss = 0
-        train_accuracy = []
+        train_accuracy = 0
         for i, (images, labels) in enumerate(
             tqdm(trainloader, desc=f"Epoch: {epoch}")
         ):
@@ -77,23 +73,23 @@ def train_classifier(device, root_dir, num_labels, patience=5, numEpochs=40):
 
             # Track metrics
             train_loss += loss.item()
-            train_accuracy.append(compute_accuracy(outputs, labels))
+            train_accuracy += compute_accuracy(outputs, labels)
         train_loss /= (i + 1)
-        train_accuracy = sum(train_accuracy) / (i + 1)
+        train_accuracy = train_accuracy / (i + 1) * 100
 
         # Validation section
         model.eval()
         valid_loss = 0
-        valid_accuracy = []
+        valid_accuracy = 0
         with torch.no_grad():
             for i, (images, labels) in enumerate(validloader):
                 images = images.to(device)
                 labels = labels.to(device)
                 outputs = model(images)
                 valid_loss += criterion(outputs, labels).item()
-                valid_accuracy.append(compute_accuracy(outputs, labels))
+                valid_accuracy += compute_accuracy(outputs, labels)
             valid_loss /= (i + 1)
-            valid_accuracy = sum(valid_accuracy) / (i + 1)
+            valid_accuracy = valid_accuracy / (i + 1) * 100
         
         # Report metrics
         print(f"Train loss:{train_loss}, Validation loss:{valid_loss}, \
