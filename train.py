@@ -1,9 +1,11 @@
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
+
 from model import CNNClassifier
 from data_utils import get_dataloader
 from tqdm import tqdm
+
 
 def compute_accuracy(outputs, labels):
     outputs = torch.argmax(outputs, dim=1)
@@ -92,8 +94,11 @@ def train_classifier(device, root_dir, patience=5, numEpochs=40):
             valid_accuracy = valid_accuracy / (i + 1) * 100
         
         # Report metrics
-        print(f"Train loss:{train_loss}, Validation loss:{valid_loss}, \
-              Train acc:{train_accuracy}, Validation accuracy:{valid_accuracy}")
+        metrics = f"Train loss: {train_loss:.3f},"
+        metrics += f"Validation loss: {valid_loss:.3f},"
+        metrics += f"Train accuracy: {train_accuracy:.3f},"
+        metrics += f"Validation accuracy: {valid_accuracy:.3f}"
+        print(metrics)
         if epoch != 0:
             ax[0].plot(
                 [epoch - 1, epoch],
