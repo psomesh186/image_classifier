@@ -15,7 +15,14 @@ def get_dataloader(root_dir, shuffle=True, batch_size=64, num_workers=4):
     Returns:
         A dataloader object.
     """
-    transform = transforms.ToTensor()
+    transform = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Normalize(
+            mean=[0.5, 0.5, 0.5],
+            std=[0.5, 0.5, 0.5]
+        )
+    ])
     dataset = datasets.ImageFolder(root=root_dir, transform=transform)
     dataloader = DataLoader(
         dataset,
