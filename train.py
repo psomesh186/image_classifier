@@ -128,7 +128,7 @@ def train_classifier(device, root_dir, patience=5, numEpochs=40):
                 color='orange',
                 label='Validation accuracy'
                 )
-            plt.pause(0.0001)
+            plt.pause(0.1)
         prev_trainloss = train_loss
         prev_validloss = valid_loss
         prev_trainacc = train_accuracy
