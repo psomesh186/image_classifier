@@ -29,4 +29,4 @@ def get_dataloader(root_dir, shuffle=True, batch_size=64, num_workers=4):
         batch_size=batch_size,
         shuffle=shuffle,
         num_workers=num_workers)
-    return dataloader
+    return dataloader, dataset.class_to_idx
