@@ -1,7 +1,4 @@
-import os
-import torch
-import numpy as np
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
 
