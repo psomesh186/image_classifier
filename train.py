@@ -12,20 +12,27 @@ def compute_accuracy(outputs, labels):
     return acc
 
 
-def train_classifier(device, root_dir, patience=5, numEpochs=40):
+def train_classifier(device, root_dir, batch_size, patience=5, numEpochs=40):
     """Trains model on dataset according to given hyperparameters.
     
     Args:
         device (str): Device to train the model on.
         root_dir (str): Root directory of dataset.
+        batch_size (int): Mini-batch size used during training.
         patience (int): Number of epochs to wait without improvement in loss. 
         (Default: 5)
         numEpochs (int): Epochs to perform training for. (Default: 40)
     """
 
     # Load data
-    trainloader, labels = get_dataloader(root_dir + '/train', batch_size=64)
-    validloader, _ = get_dataloader(root_dir + '/valid', batch_size=64)
+    trainloader, labels = get_dataloader(
+        root_dir + '/train',
+        batch_size=batch_size
+        )
+    validloader, _ = get_dataloader(
+        root_dir + '/valid',
+        batch_size=batch_size
+        )
     num_labels = len(labels)
 
     # Graph setup
