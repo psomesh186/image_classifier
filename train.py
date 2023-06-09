@@ -154,3 +154,6 @@ def train_classifier(device, root_dir, batch_size, patience=5, numEpochs=40):
             patience_counter += 1
             if patience_counter > patience:
                 break
+        
+    # Save plots to device
+    plt.savefig("outputs/plot.png")
