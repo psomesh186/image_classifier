@@ -1,6 +1,7 @@
 import torch
+import matplotlib.pyplot as plt
 
-from utils import get_dataloader, compute_accuracy
+from utils import get_dataloader, compute_accuracy, denormalize
 from model import CNNClassifier
 from tqdm import tqdm
 
@@ -44,4 +45,32 @@ def test_classifier(device, test_data_path, batch_size, model_path=None):
             outputs = model(images)
             test_accuracy += compute_accuracy(outputs, labels)
         test_accuracy = test_accuracy / (i + 1) * 100
-        print(f"Test Accuracy: {test_accuracy:.3f}%")            
+        print(f"Test Accuracy: {test_accuracy:.3f}%")
+        
+        # Visualize results on first 9 images
+        cols = 3
+        rows = 3
+        num_images = rows * cols
+        fig, ax = plt.subplots(nrows=rows, ncols=cols, figsize=(9, 9))
+        plt.tight_layout()
+        images, labels = next(iter(testloader))
+        images = images[:num_images].to(device)
+        labels = labels[:num_images]
+        outputs = model(images)
+        images = images.cpu()
+        outputs = torch.argmax(outputs, dim=1)
+        idx2class = {idx:label for label, idx in class2idx.items()}
+        sample = 0
+        for r in range(rows):
+            for c in range(cols):
+                image = denormalize(images[sample])
+                ax[r][c].imshow(image.permute(1, 2, 0))
+                ground_truth = idx2class[labels[sample].item()]
+                text = f"Ground Truth: {ground_truth}"
+                pred = idx2class[outputs[sample].item()]
+                text += f"\nPrediction: {pred}"
+                ax[r][c].set_xlabel(text)
+                ax[r][c].set_xticks([])
+                ax[r][c].set_yticks([])
+                sample += 1
+        plt.savefig("outputs/results.png")

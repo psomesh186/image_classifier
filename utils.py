@@ -42,3 +42,19 @@ def compute_accuracy(outputs, labels):
     outputs = torch.argmax(outputs, dim=1)
     acc = (outputs == labels).sum().item() / len(outputs)
     return acc
+
+def denormalize(x):
+    """Reverse normalization of image to display in output.
+    
+    Args:
+        x (Tensor): Input image tensor.
+
+    Returns:
+        Tensor: Original image.    
+    """
+    tensor = x.clone()
+    mean = torch.Tensor([0.5, 0.5, 0.5])
+    std = torch.Tensor([0.5, 0.5, 0.5])
+    for t, m, s in zip(tensor, mean, std):
+        t.mul_(s).add_(m)
+    return tensor
