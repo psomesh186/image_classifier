@@ -3,6 +3,7 @@ import os
 import torch
 
 from train import train_classifier
+from test import test_classifier
 
 
 if __name__ == '__main__':
@@ -40,6 +41,17 @@ if __name__ == '__main__':
         default="data",
         help="Path of root data folder"
     )
+    parser.add_argument(
+        "--test",
+        action="store_true",
+        help="Toggle to skip training and perform testing on trained model"
+    )
+    parser.add_argument(
+        "--model_path",
+        type=str,
+        default="checkpoints/best.pt",
+        help="Path to trained model"
+    )
     args = parser.parse_args()
     
     # Create relevant folders
@@ -60,10 +72,17 @@ if __name__ == '__main__':
         else:
             device = "cpu"
     
-    train_classifier(
+    if not args.test:
+        train_classifier(
+            device=device,
+            root_dir=args.data_path,
+            batch_size=args.batch_size,
+            patience=args.patience,
+            numEpochs=args.epochs
+        )
+    test_classifier(
         device=device,
-        root_dir=args.data_path,
         batch_size=args.batch_size,
-        patience=args.patience,
-        numEpochs=args.epochs
+        test_data_path=args.data_path,
+        model_path=args.model_path
     )
