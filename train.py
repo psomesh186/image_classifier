@@ -2,14 +2,8 @@ import torch
 import matplotlib.pyplot as plt
 
 from model import CNNClassifier
-from data_utils import get_dataloader
+from utils import get_dataloader, compute_accuracy
 from tqdm import tqdm
-
-
-def compute_accuracy(outputs, labels):
-    outputs = torch.argmax(outputs, dim=1)
-    acc = (outputs == labels).sum().item() / len(outputs)
-    return acc
 
 
 def train_classifier(device, root_dir, batch_size, patience=5, numEpochs=40):
