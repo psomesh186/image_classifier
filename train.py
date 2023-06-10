@@ -103,31 +103,29 @@ def train_classifier(device, root_dir, batch_size, patience=5, numEpochs=40):
             ax[0].plot(
                 [epoch - 1, epoch],
                 [prev_trainloss, train_loss],
-                marker='o',
                 color='blue',
-                label='Train loss'
+                label='Train loss' if epoch == 1 else ''
                 )
             ax[0].plot(
                 [epoch - 1, epoch],
                 [prev_validloss, valid_loss],
-                marker='o',
                 color='orange',
-                label='Validation loss'
+                label='Validation loss' if epoch == 1 else ''
                 )
             ax[1].plot(
                 [epoch - 1, epoch],
                 [prev_trainacc, train_accuracy],
-                marker='o',
                 color='blue',
-                label='Train accuracy'
+                label='Train accuracy' if epoch == 1 else ''
                 )
             ax[1].plot(
                 [epoch - 1, epoch],
                 [prev_validacc, valid_accuracy],
-                marker='o',
                 color='orange',
-                label='Validation accuracy'
+                label='Validation accuracy' if epoch == 1 else ''
                 )
+            ax[0].legend()
+            ax[1].legend()
             plt.pause(0.1)
         prev_trainloss = train_loss
         prev_validloss = valid_loss
